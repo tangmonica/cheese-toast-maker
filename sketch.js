@@ -5,41 +5,38 @@ let gameWidth = 720;
 let gameHeight = 540;
 
 bgCol = [127, 111, 140]
-// gameBgCol = [84, 51, 68]
+// bgCol = [84, 51, 68]
 
-// let doneButton, doneButtonHover, doneButtonPressed;
-// let redoButton, redoButtonHover, redoButtonPressed;
-// let cheese, bread;
-// let circle;
-let buttons;
+let cutters = [];
 
 function preload() {
+    // ===== PLATE IMG ===== //
+    plate = loadImage('assets/imgs/plate.png');
+
+    // ===== REDO & DONE BUTTON IMGS ===== //
+    redoButtonImg = loadImage('assets/imgs/buttons/redoButton.png');
+    redoButtonHoverImg = loadImage('assets/imgs/buttons/redoButtonHover.png');
+    redoButtonPressedImg = loadImage('assets/imgs/buttons/redoButtonPressed.png');
+
     doneButtonImg = loadImage('assets/imgs/buttons/doneButton.png');
     doneButtonHoverImg = loadImage('assets/imgs/buttons/doneButtonHover.png');
     doneButtonPressedImg = loadImage('assets/imgs/buttons/doneButtonPressed.png');
 
-
-    test2 = loadImage('assets/imgs/buttons/redoButton.png');
-    // cheese = loadImage('assets/imgs/cheese.png');
-    bread = loadImage('assets/imgs/bread.png');
-    plate = loadImage('assets/imgs/plate.png');
-    circle = loadImage('assets/imgs/cutters/cutterCircle.png');
+    // ===== CUTTER IMGS ===== //
+    circleCutterImg = loadImage('assets/imgs/cutters/cutterCircle.png');
     circleMask = loadImage('assets/imgs/cutters/masks/maskCircle.png');
 
-    square = loadImage('assets/imgs/cutters/cutterSquare.png');
-    triangle = loadImage('assets/imgs/cutters/cutterTriangle.png');
+    squareCutterImg = loadImage('assets/imgs/cutters/cutterSquare.png');
+    squareMask = loadImage('assets/imgs/cutters/masks/maskSquare.png');
+
+    triangleCutterImg = loadImage('assets/imgs/cutters/cutterTriangle.png');
+    triangleMask = loadImage('assets/imgs/cutters/masks/maskTriangle.png');
+
     starCutterImg = loadImage('assets/imgs/cutters/cutterStar.png');
     starMask = loadImage('assets/imgs/cutters/masks/maskStar.png');
 
-    heart = loadImage('assets/imgs/cutters/cutterHeart.png');
-    
-    toastButton = loadImage('assets/imgs/buttons/toastButton.png');
-    cheeseButton = loadImage('assets/imgs/buttons/cheeseButton.png');
-
-    ketchup = loadImage('assets/imgs/ketchup/ketchupBottle.png');
-    ketchupCursor = loadImage('assets/imgs/ketchup/ketchupCursor.png');
-    ketchupDot = loadImage('assets/imgs/ketchup/ketchupDot.png');
-
+    heartCutterImg = loadImage('assets/imgs/cutters/cutterHeart.png');
+    heartMask = loadImage('assets/imgs/cutters/masks/maskHeart.png');
 }
 
 function setup() {
@@ -49,97 +46,152 @@ function setup() {
 
     noSmooth();
 
-    // Create Buttons
+    // ===== CREATE BUTTONS ===== //
+    redoButton = new Button(100, 300, redoButtonImg, redoButtonHoverImg, redoButtonPressedImg, null, test);
     doneButton = new Button(100, 450, doneButtonImg, doneButtonHoverImg, doneButtonPressedImg, null, test);
-    // Add Button objects to buttons array
 
-    circleCutter = new Cutter(circle, circleMask, 50, 50);
-    starCutter = new Cutter(starCutterImg, starMask, 150, 50);
+    // ===== CREATE CUTTERS ===== //
+    circleCutter = new Cutter(circleCutterImg, circleMask, 50, 50);
+    squareCutter = new Cutter(squareCutterImg, squareMask, 150, 50);
+    triangleCutter = new Cutter(triangleCutterImg, triangleMask, 250, 50);
+    starCutter = new Cutter(starCutterImg, starMask, 350, 50);
+    heartCutter = new Cutter(heartCutterImg, heartMask, 450, 50);
+    // ===== ADD CUTTERS TO cutters ARRAY ===== //
+    cutters.push(circleCutter);
+    cutters.push(squareCutter);
+    cutters.push(triangleCutter);
+    cutters.push(starCutter);
+    cutters.push(heartCutter);
 
-    cheese = new Cheese();
+    // ===== CREATE BREAD & CHEESE OBJS ===== //
+    bread = new Food("bread", spawnBread);
+    cheese = new Food("cheese", spawnCheese);
+
+    // ===== CREATE KETCHUP OBJ =====
+    ketchup = new Ketchup();
 }
 
 function draw() {
     background(bgCol);
-    doneButton.display();
-    doneButton.checkClicked();
-    // image(plate, width / 2, height * 0.7);
-
-    // image(test, width * 0.15, height * .8);
-    // image(test2, width * 0.15, height * .8 - 150);
-
-    // image(bread, width / 2, height / 2);
-    // let c = cheese.img.get(50, 50, circleMask.width, circleMask.height);
-    // c.mask(circleMask);
+    // ===== DRAW PLATE ===== //
+    image(plate, width / 2, height * 0.7);
     
-    cheese.display();
-    // cheese.mask(circleMask);
-    // cheese.subtract(16, 16, circleMask);
-    // console.log("subtract")
-    // image(cheese.img, width / 2 + 100, height / 2 + 100);
+    // ===== DRAW KETCHUP PATH, CHEESE, BREAD ===== //
+    ketchup.draw(0);
+    // Clicked the cheese button first -> display cheese first
+    // After bread button is clicked, can no longer cut cheese, and bread displayed over cheese
+    if ((cheese.visible && !bread.visible) || // Only clicked cheese button
+        (cheese.visible && bread.visible && !cheese.canCut && bread.canCut)) { // Clicked both (cheese clicked first)
+        cheese.display();
+        ketchup.draw(1);
+        bread.display();
+    }
+    // vice versa
+    else {
+        bread.display();
+        ketchup.draw(1);
+        cheese.display();
+    }
+    ketchup.draw(2);
+    
+     // ===== DRAW REDO & DONE BUTTONS ===== //
+     redoButton.display();
+     redoButton.checkClicked();
+     doneButton.display();
+     doneButton.checkClicked();
 
-    circleCutter.updateCursor();
-    circleCutter.checkIfUsing();
+    // ===== DRAW BREAD & CHEESE BUTTONS ===== //
+    bread.displayButton();
+    cheese.displayButton();
 
-    starCutter.updateCursor();
-    starCutter.checkIfUsing();
+    // ===== DRAW CUTTERS ===== //
+    cutters.forEach(cutter => cutter.checkIfUsing());
 
-    // image(circle, width / 2, height / 2);
-    // image(square, width / 2, height / 2 + 75);
-    // image(triangle, width / 2 + 75, height / 2);
-    // image(star, width / 2 + 75, height / 2 + 75);
-    // image(heart, width / 2 + 150, height / 2 + 75);
+    // Want to display ketchup bottle/cursor after buttons and cutters so that cursor shows up on top
+    ketchup.display();
 
-    // image(toastButton, width * 0.9, height * 0.7);
-    // image(cheeseButton, width * 0.9, height * 0.7 - 150);
-
-    // image(ketchup, width * 0.87, height * 0.15);
-    // image(ketchupCursor, width * 0.5, height * 0.85);
-    // image(ketchupDot, width * 0.45, height * 0.9);
-
+    // ===== DRAW CURSOR ===== //
+    updateCursor();
 }
 
 function mouseClicked() {
+    if (redoButton.isOver()) {
+        redoButton.clicked = true;
+    }
     if (doneButton.isOver()) {
-        console.log("done button clicked");
         doneButton.clicked = true;
     }
-
-    if (circleCutter.isOverOriginalPos()) {
-        console.log("circle cutter clicked");
-        // Toggle boolean
-        circleCutter.inUse = !(circleCutter.inUse);
+    if (cheese.button.isOver()) {
+        cheese.button.clicked = true;
+    }
+    if (bread.button.isOver()) {
+        bread.button.clicked = true;
     }
 
-    if (circleCutter.inUse && isOverCheese(mouseX, mouseY)) {
-        // Redefine (x,y) relative to upper left corner of cheese
-        let upperLeftX = cheese.x - cheese.img.width / 2;
-        let upperLeftY = cheese.y - cheese.img.height / 2;
+    // To pick up and put down cutters
+    cutters.forEach(cutter => {
+        if (cutter.isOverInitialPos()) {
+            cutter.inUse = !(cutter.inUse);
+        }
+    })
 
-        cheese.cut(mouseX - upperLeftX, mouseY - upperLeftY, circleCutter.mask)
-    }
+    // To cut foods
+    cutters.forEach(cutter => {
+        bread.cut(mouseX, mouseY, cutter);
+        cheese.cut(mouseX, mouseY, cutter);
+    })
 
-    if (starCutter.isOverOriginalPos()) {
-        // Toggle boolean
-        starCutter.inUse = !(starCutter.inUse);
-    }
-
-    if (starCutter.inUse && isOverCheese(mouseX, mouseY)) {
-        // Redefine (x,y) relative to upper left corner of cheese
-        let upperLeftX = cheese.x - cheese.img.width / 2;
-        let upperLeftY = cheese.y - cheese.img.height / 2;
-
-        cheese.cut(mouseX - upperLeftX, mouseY - upperLeftY, starCutter.mask)
+    // To use ketchup bottle
+    if (ketchup.isOverBottle(mouseX, mouseY)) {
+        ketchup.inUse = !(ketchup.inUse);
     }
 
     return false;
 }
 
-function isOverCheese(x, y) {
-    return cheese.inBoundsCanvasCoord(x, y);
-}
-
 function test() {
     console.log("drew ellipse");
     ellipse(100, 100, 100, 100);
+}
+
+// When cheese button clicked, display cheese and disable bread cutting
+function spawnCheese() {
+    cheese.visible = true;
+    cheese.canCut = true;
+    bread.canCut = false;
+
+    // Change zIndex so that ketchup path shows up on cheese
+    ketchup.zIndex = (cheese.visible && bread.visible) ? 2 : 1;
+}
+
+// When bread button clicked, display bread and disable cheese cutting
+function spawnBread() {
+    bread.visible = true;
+    bread.canCut = true;
+    cheese.canCut = false;
+
+    // Change zIndex so that ketchup path shows up on bread
+    ketchup.zIndex = (cheese.visible && bread.visible) ? 2 : 1;
+
+}
+
+function updateCursor() {  
+    // Change curser to glove if hovering over cutter or ketchup  
+    if (circleCutter.isOverInitialPos() ||
+        squareCutter.isOverInitialPos() ||
+        triangleCutter.isOverInitialPos() ||
+        starCutter.isOverInitialPos() ||
+        heartCutter.isOverInitialPos() ||
+        ketchup.isOverBottle(mouseX, mouseY)) 
+    {
+        cursor('grab');
+    }
+    else 
+    {
+        cursor();    // Default cursor
+    } 
+}
+
+function disableButtonsCutters() {
+    
 }
