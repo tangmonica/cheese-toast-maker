@@ -1,10 +1,11 @@
 class Ketchup {
     constructor() {
-        this.bottle = loadImage('assets/imgs/ketchup/ketchupBottle.png')
-        this.cursorImg = loadImage('assets/imgs/ketchup/ketchupCursor.png')
-        this.dot = loadImage('assets/imgs/ketchup/ketchupDot.png')
+        this.bottle = loadImage('assets/imgs/ketchup/ketchupBottle.png');
+        this.bottleMarker = loadImage('assets/imgs/ketchup/ketchupBottleMarker.png');
+        this.cursorImg = loadImage('assets/imgs/ketchup/ketchupCursor.png');
+        this.dot = loadImage('assets/imgs/ketchup/ketchupDot.png');
         
-        this.x = 600;
+        this.x = gameWidth - 110;
         this.y = 100;
 
         this.enabled = true;
@@ -22,6 +23,7 @@ class Ketchup {
         if (this.enabled) {
             if (this.inUse) {
                 noCursor();
+                image(this.bottleMarker, this.x, this.y);
                 image(this.cursorImg, mouseX, mouseY);
                 this.storePath();
             }

@@ -4,7 +4,6 @@
 let gameWidth = 720;
 let gameHeight = 540;
 
-// bgCol = [130, 111, 140]
 bgCol = [129, 116, 136]
 
 let bigButtons = [];
@@ -29,18 +28,23 @@ function preload() {
 
     // ===== CUTTER IMGS ===== //
     circleCutterImg = loadImage('assets/imgs/cutters/cutterCircle.png');
+    circleMarker = loadImage('assets/imgs/cutters/markers/cutterCircleMarker.png');
     circleMask = loadImage('assets/imgs/cutters/masks/maskCircle.png');
 
     squareCutterImg = loadImage('assets/imgs/cutters/cutterSquare.png');
+    squareMarker = loadImage('assets/imgs/cutters/markers/cutterSquareMarker.png');
     squareMask = loadImage('assets/imgs/cutters/masks/maskSquare.png');
 
     triangleCutterImg = loadImage('assets/imgs/cutters/cutterTriangle.png');
+    triangleMarker = loadImage('assets/imgs/cutters/markers/cutterTriangleMarker.png');
     triangleMask = loadImage('assets/imgs/cutters/masks/maskTriangle.png');
 
     starCutterImg = loadImage('assets/imgs/cutters/cutterStar.png');
+    starMarker = loadImage('assets/imgs/cutters/markers/cutterStarMarker.png');
     starMask = loadImage('assets/imgs/cutters/masks/maskStar.png');
 
     heartCutterImg = loadImage('assets/imgs/cutters/cutterHeart.png');
+    heartMarker = loadImage('assets/imgs/cutters/markers/cutterHeartMarker.png');
     heartMask = loadImage('assets/imgs/cutters/masks/maskHeart.png');
 }
 
@@ -61,11 +65,12 @@ function setup() {
     bigButtons.push(saveButton);
 
     // ===== CREATE CUTTERS ===== //
-    circleCutter = new Cutter(circleCutterImg, circleMask, 50, 50);
-    squareCutter = new Cutter(squareCutterImg, squareMask, 150, 50);
-    triangleCutter = new Cutter(triangleCutterImg, triangleMask, 250, 50);
-    starCutter = new Cutter(starCutterImg, starMask, 350, 50);
-    heartCutter = new Cutter(heartCutterImg, heartMask, 450, 50);
+    circleCutter = new Cutter(circleCutterImg, circleMarker, circleMask, 230, 100);
+    squareCutter = new Cutter(squareCutterImg, squareMarker, squareMask, 140, 75);
+    triangleCutter = new Cutter(triangleCutterImg, triangleMarker, triangleMask, 65 , 85);
+    starCutter = new Cutter(starCutterImg, starMarker, starMask, 165, 150);
+    heartCutter = new Cutter(heartCutterImg, heartMarker, heartMask, 90, 170);
+
     // ===== ADD CUTTERS TO cutters ARRAY ===== //
     cutters.push(circleCutter);
     cutters.push(squareCutter);
@@ -84,7 +89,7 @@ function setup() {
 function draw() {
     background(bgCol);
     // ===== DRAW PLATE ===== //
-    image(plate, width / 2, height * 0.7);
+    image(plate, width / 2 + 15, height / 2 + 120);
     
     // ===== DRAW KETCHUP PATH, CHEESE, BREAD ===== //
     ketchup.draw(0);
@@ -108,13 +113,6 @@ function draw() {
     bigButtons.forEach(bttn => bttn.display());
     bigButtons.forEach(bttn => bttn.checkClicked());
 
-    // redoButton.display();
-    // redoButton.checkClicked();
-    // doneButton.display();
-    // doneButton.checkClicked();
-    // saveButton.display();
-    // saveButton.checkClicked();
-
     // ===== DRAW BREAD & CHEESE BUTTONS ===== //
     bread.displayButton();
     cheese.displayButton();
@@ -137,12 +135,6 @@ function mouseClicked() {
                 bttn.clicked = true;
             }
         })
-        // if (redoButton.isOver()) {
-        //     redoButton.clicked = true;
-        // }
-        // if (doneButton.isOver()) {
-        //     doneButton.clicked = true;
-        // }
         if (cheese.button.isOver()) {
             cheese.button.clicked = true;
         }

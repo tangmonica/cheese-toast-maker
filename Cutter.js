@@ -1,6 +1,7 @@
 class Cutter {
-    constructor(img, mask, posX, posY) {
+    constructor(img, marker, mask, posX, posY) {
         this.img = img;
+        this.marker = marker;
         this.mask = mask;
         this.initialX = posX;
         this.initialY = posY;
@@ -11,6 +12,7 @@ class Cutter {
 
     display() {
         if (this.visible) {
+            image(this.marker, this.initialX, this.initialY);
             if (this.inUse) {
                 image(this.img, mouseX, mouseY);
             }
@@ -30,8 +32,8 @@ class Cutter {
     }
 
     _isOverInitialPos() {
-        return ((Math.abs(this.initialX - mouseX) < this.img.width / 2)  && 
-                (Math.abs(this.initialY - mouseY) < this.img.height / 2));
+        return ((Math.abs(this.initialX - mouseX) < this.marker.width / 2)  && 
+                (Math.abs(this.initialY - mouseY) < this.marker.height / 2));
     }
 
     canGrab() {

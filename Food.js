@@ -6,8 +6,8 @@ class Food {
                 this.img = loadImage('assets/imgs/cheese.png');
                 this.originalImg = loadImage('assets/imgs/cheese.png');
                 this.button = new Button(
-                    600, 
-                    450, 
+                    gameWidth - 75, 
+                    gameHeight - 75, 
                     loadImage('assets/imgs/buttons/cheeseButton.png'),
                     null,
                     loadImage('assets/imgs/buttons/cheeseButtonPressed.png'),
@@ -19,8 +19,8 @@ class Food {
                 this.img = loadImage('assets/imgs/bread.png');
                 this.originalImg = loadImage('assets/imgs/bread.png');
                 this.button = new Button(
-                    600, 
-                    350, 
+                    gameWidth - 75, 
+                    gameHeight - 180,  
                     loadImage('assets/imgs/buttons/breadButton.png'),
                     null,
                     loadImage('assets/imgs/buttons/breadButtonPressed.png'),
@@ -29,8 +29,8 @@ class Food {
                     );
                 break;
         }
-        this.x = 360;
-        this.y = 360;
+        this.x = 375;
+        this.y = 375;
 
         this.visible = false;
         this.canCut = false;
