@@ -52,7 +52,7 @@ class Ketchup {
             // Offset dot from cursorImg's center to align with ketchup bottle's opening.
             let offsetX = - this.cursorImg.width / 2 + 4;
             let offsetY = this.cursorImg.height / 2 - 4;
-            if (!this.isOverBottle(mouseX + offsetX, mouseY + offsetY)) {
+            if (!this._isOverBottle(mouseX + offsetX, mouseY + offsetY)) {
                 let dotInfo = [this.dot, mouseX + offsetX, mouseY + offsetY];
                 this.paths[this.zIndex].push(dotInfo);
                 if (!this.drawSound.isPlaying()) {
@@ -66,7 +66,11 @@ class Ketchup {
         this.paths[depthIndex].forEach(elt => image.apply(null, elt)); 
     }
 
-    isOverBottle(x, y) {
+    canGrab() {
+        return this.enabled && this._isOverBottle(mouseX, mouseY);
+    }
+
+    _isOverBottle(x, y) {
         return ((Math.abs(this.x - x) < this.bottle.width / 2)  && 
                 (Math.abs(this.y - y) < this.bottle.height / 2));
     }

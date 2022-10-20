@@ -177,7 +177,7 @@ function mouseClicked() {
     }
 
     // To use ketchup bottle
-    if (ketchup.isOverBottle(mouseX, mouseY)) {
+    if (ketchup.canGrab()) {
         if (ketchup.inUse) {
             ketchup.unselectSound.play();
         } else {
@@ -217,7 +217,7 @@ function updateCursor() {
         triangleCutter.canGrab() ||
         starCutter.canGrab() ||
         heartCutter.canGrab() ||
-        ketchup.isOverBottle(mouseX, mouseY)) 
+        ketchup.canGrab()) 
     {
         cursor('grab');
     }
