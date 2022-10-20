@@ -138,25 +138,27 @@ function draw() {
 function mouseClicked() {
     // Only allow clicking buttons and using cutters when ketchup is not in use
     if (!ketchup.inUse) {
-        bigButtons.forEach(bttn => {
-            if (bttn.isOver()) {
-                bttn.clicked = true;
-                if (bttn.enabled) {
-                    bttn.sound.play();
+        if (!usingCutter) {
+            bigButtons.forEach(bttn => {
+                if (bttn.isOver()) {
+                    bttn.clicked = true;
+                    if (bttn.enabled) {
+                        bttn.sound.play();
+                    }
                 }
+            })
+            if (cheese.button.isOver()) {
+                if (cheese.button.enabled) {
+                    cheese.button.sound.play();
+                }
+                cheese.button.clicked = true;
             }
-        })
-        if (cheese.button.isOver()) {
-            if (cheese.button.enabled) {
-                cheese.button.sound.play();
+            if (bread.button.isOver()) {
+                if (bread.button.enabled) {
+                    bread.button.sound.play();
+                }
+                bread.button.clicked = true;
             }
-            cheese.button.clicked = true;
-        }
-        if (bread.button.isOver()) {
-            if (bread.button.enabled) {
-                bread.button.sound.play();
-            }
-            bread.button.clicked = true;
         }
 
         // To pick up and put down cutters
