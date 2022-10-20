@@ -5,22 +5,36 @@ class Cutter {
         this.initialX = posX;
         this.initialY = posY;
 
+        this.visible = true;
         this.inUse = false;
     }
 
-    isOverInitialPos() {
+    display() {
+        if (this.visible) {
+            if (this.inUse) {
+                image(this.img, mouseX, mouseY);
+            }
+            else {
+                // Return cutter to original position
+                image(this.img, this.initialX, this.initialY);
+            }
+        }
+    }
+
+    hide() {
+        this.visible = false;
+    }
+
+    unhide() {
+        this.visible = true;
+    }
+
+    _isOverInitialPos() {
         return ((Math.abs(this.initialX - mouseX) < this.img.width / 2)  && 
                 (Math.abs(this.initialY - mouseY) < this.img.height / 2));
     }
 
-    checkIfUsing() {
-        if (this.inUse) {
-            image(this.img, mouseX, mouseY);
-        }
-        else {
-            // Return cutter to original position
-            image(this.img, this.initialX, this.initialY);
-        }
+    canGrab() {
+        return this.visible && this._isOverInitialPos();
     }
-     
 }

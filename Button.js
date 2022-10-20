@@ -10,23 +10,37 @@ class Button {
         
         this.onClickEvent = event;
 
+        this.visible = true;
         this.enabled = true;
         this.clicked = false;
     }
 
     display() {
-        if (this.disabledImg && !this.enabled) {
-            image(this.disabledImg, this.x, this.y);
+        if (this.visible) {
+            if (this.disabledImg && !this.enabled) {
+                image(this.disabledImg, this.x, this.y);
+            }
+            else if (this.pressedImg && this.isPressed()) {
+                image(this.pressedImg, this.x, this.y);
+            }
+            else if (this.hoverImg && this.isOver()) {
+                image(this.hoverImg, this.x, this.y);
+            }
+            else {
+                image(this.img, this.x, this.y);
+            }
         }
-        else if (this.pressedImg && this.isPressed()) {
-            image(this.pressedImg, this.x, this.y);
-        }
-        else if (this.hoverImg && this.isOver()) {
-            image(this.hoverImg, this.x, this.y);
-        }
-        else {
-            image(this.img, this.x, this.y);
-        }
+    }
+
+    reset() {
+        this.visible = true;
+        this.enabled = true;
+        this.clicked = false;
+    }
+
+    hide() {
+        this.visible = false;
+        this.enabled = false;
     }
     
     isOver() {
@@ -46,5 +60,5 @@ class Button {
             }
         }
     }
-    
+
 }

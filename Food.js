@@ -1,8 +1,10 @@
 class Food {
     constructor(name, onClickEvent) {
+        this.name = name;
         switch (name) {
             case "cheese":
                 this.img = loadImage('assets/imgs/cheese.png');
+                this.originalImg = loadImage('assets/imgs/cheese.png');
                 this.button = new Button(
                     600, 
                     450, 
@@ -15,6 +17,7 @@ class Food {
                 break;
             case "bread":
                 this.img = loadImage('assets/imgs/bread.png');
+                this.originalImg = loadImage('assets/imgs/bread.png');
                 this.button = new Button(
                     600, 
                     350, 
@@ -44,9 +47,16 @@ class Food {
         this.button.checkClicked();
     }
 
+    reset() {
+        this.img = loadImage(`assets/imgs/${this.name}.png`);
+
+        this.visible = false;
+        this.canCut = false;
+        this.button.reset();
+    }
+
     cut(canvasX, canvasY, cutterObj) {
         if (this.canCut && cutterObj.inUse && this.inBoundsForCutting(canvasX, canvasY)) {
-            console.log("can cut")
             // Redefine (x, y) relative to upper left corner of food image
             let upperLeftX = this.x - this.img.width / 2;
             let upperLeftY = this.y - this.img.height / 2;

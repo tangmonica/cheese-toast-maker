@@ -7,6 +7,7 @@ class Ketchup {
         this.x = 600;
         this.y = 100;
 
+        this.enabled = true;
         this.inUse = false;
 
         // z-index determines depth at which ketchup path is drawn
@@ -18,18 +19,30 @@ class Ketchup {
     }
 
     display() {
-        if (this.inUse) {
-            noCursor();
-            image(this.cursorImg, mouseX, mouseY);
-            this.storePath();
-        }
-        else {
-            image(this.bottle, this.x, this.y);
+        if (this.enabled) {
+            if (this.inUse) {
+                noCursor();
+                image(this.cursorImg, mouseX, mouseY);
+                this.storePath();
+            }
+            else {
+                image(this.bottle, this.x, this.y);
+            }
         }
     }
 
+    reset() {
+        this.enabled = true;
+        this.zIndex = 0;
+        this.paths = [[], [], []]; 
+    }
+
+    hide() {
+        this.enabled = false;
+    }
+
     storePath() {
-        if (mouseIsPressed) {
+        if (mouseIsPressed && this.enabled) {
             // Offset dot from cursorImg's center to align with ketchup bottle's opening.
             let offsetX = - this.cursorImg.width / 2 + 4;
             let offsetY = this.cursorImg.height / 2 - 4;

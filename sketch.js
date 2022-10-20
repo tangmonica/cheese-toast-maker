@@ -4,9 +4,10 @@
 let gameWidth = 720;
 let gameHeight = 540;
 
-bgCol = [127, 111, 140]
-// bgCol = [84, 51, 68]
+// bgCol = [130, 111, 140]
+bgCol = [129, 116, 136]
 
+let bigButtons = [];
 let cutters = [];
 
 function preload() {
@@ -21,6 +22,10 @@ function preload() {
     doneButtonImg = loadImage('assets/imgs/buttons/doneButton.png');
     doneButtonHoverImg = loadImage('assets/imgs/buttons/doneButtonHover.png');
     doneButtonPressedImg = loadImage('assets/imgs/buttons/doneButtonPressed.png');
+
+    saveButtonImg = loadImage('assets/imgs/buttons/saveButton.png');
+    saveButtonHoverImg = loadImage('assets/imgs/buttons/saveButtonHover.png');
+    saveButtonPressedImg = loadImage('assets/imgs/buttons/saveButtonPressed.png');
 
     // ===== CUTTER IMGS ===== //
     circleCutterImg = loadImage('assets/imgs/cutters/cutterCircle.png');
@@ -47,8 +52,13 @@ function setup() {
     noSmooth();
 
     // ===== CREATE BUTTONS ===== //
-    redoButton = new Button(100, 300, redoButtonImg, redoButtonHoverImg, redoButtonPressedImg, null, test);
-    doneButton = new Button(100, 450, doneButtonImg, doneButtonHoverImg, doneButtonPressedImg, null, test);
+    redoButton = new Button(100, 300, redoButtonImg, redoButtonHoverImg, redoButtonPressedImg, null, resetGame);
+    doneButton = new Button(100, 450, doneButtonImg, doneButtonHoverImg, doneButtonPressedImg, null, finishGame);
+    saveButton = new Button(100, 450, saveButtonImg, saveButtonHoverImg, saveButtonPressedImg, null, saveGameImg);
+    saveButton.hide();
+    bigButtons.push(redoButton);
+    bigButtons.push(doneButton);
+    bigButtons.push(saveButton);
 
     // ===== CREATE CUTTERS ===== //
     circleCutter = new Cutter(circleCutterImg, circleMask, 50, 50);
@@ -94,18 +104,23 @@ function draw() {
     }
     ketchup.draw(2);
     
-     // ===== DRAW REDO & DONE BUTTONS ===== //
-     redoButton.display();
-     redoButton.checkClicked();
-     doneButton.display();
-     doneButton.checkClicked();
+    // ===== DRAW REDO & DONE BUTTONS ===== //
+    bigButtons.forEach(bttn => bttn.display());
+    bigButtons.forEach(bttn => bttn.checkClicked());
+
+    // redoButton.display();
+    // redoButton.checkClicked();
+    // doneButton.display();
+    // doneButton.checkClicked();
+    // saveButton.display();
+    // saveButton.checkClicked();
 
     // ===== DRAW BREAD & CHEESE BUTTONS ===== //
     bread.displayButton();
     cheese.displayButton();
 
     // ===== DRAW CUTTERS ===== //
-    cutters.forEach(cutter => cutter.checkIfUsing());
+    cutters.forEach(cutter => cutter.display());
 
     // Want to display ketchup bottle/cursor after buttons and cutters so that cursor shows up on top
     ketchup.display();
@@ -115,31 +130,39 @@ function draw() {
 }
 
 function mouseClicked() {
-    if (redoButton.isOver()) {
-        redoButton.clicked = true;
-    }
-    if (doneButton.isOver()) {
-        doneButton.clicked = true;
-    }
-    if (cheese.button.isOver()) {
-        cheese.button.clicked = true;
-    }
-    if (bread.button.isOver()) {
-        bread.button.clicked = true;
-    }
-
-    // To pick up and put down cutters
-    cutters.forEach(cutter => {
-        if (cutter.isOverInitialPos()) {
-            cutter.inUse = !(cutter.inUse);
+    // Only allow clicking buttons and using cutters when ketchup is not in use
+    if (!ketchup.inUse) {
+        bigButtons.forEach(bttn => {
+            if (bttn.isOver()) {
+                bttn.clicked = true;
+            }
+        })
+        // if (redoButton.isOver()) {
+        //     redoButton.clicked = true;
+        // }
+        // if (doneButton.isOver()) {
+        //     doneButton.clicked = true;
+        // }
+        if (cheese.button.isOver()) {
+            cheese.button.clicked = true;
         }
-    })
+        if (bread.button.isOver()) {
+            bread.button.clicked = true;
+        }
 
-    // To cut foods
-    cutters.forEach(cutter => {
-        bread.cut(mouseX, mouseY, cutter);
-        cheese.cut(mouseX, mouseY, cutter);
-    })
+        // To pick up and put down cutters
+        cutters.forEach(cutter => {
+            if (cutter.canGrab()) {
+                cutter.inUse = !(cutter.inUse);
+            }
+        })
+
+        // To cut foods
+        cutters.forEach(cutter => {
+            bread.cut(mouseX, mouseY, cutter);
+            cheese.cut(mouseX, mouseY, cutter);
+        })
+    }
 
     // To use ketchup bottle
     if (ketchup.isOverBottle(mouseX, mouseY)) {
@@ -147,11 +170,6 @@ function mouseClicked() {
     }
 
     return false;
-}
-
-function test() {
-    console.log("drew ellipse");
-    ellipse(100, 100, 100, 100);
 }
 
 // When cheese button clicked, display cheese and disable bread cutting
@@ -177,11 +195,11 @@ function spawnBread() {
 
 function updateCursor() {  
     // Change curser to glove if hovering over cutter or ketchup  
-    if (circleCutter.isOverInitialPos() ||
-        squareCutter.isOverInitialPos() ||
-        triangleCutter.isOverInitialPos() ||
-        starCutter.isOverInitialPos() ||
-        heartCutter.isOverInitialPos() ||
+    if (circleCutter.canGrab() ||
+        squareCutter.canGrab() ||
+        triangleCutter.canGrab() ||
+        starCutter.canGrab() ||
+        heartCutter.canGrab() ||
         ketchup.isOverBottle(mouseX, mouseY)) 
     {
         cursor('grab');
@@ -192,6 +210,32 @@ function updateCursor() {
     } 
 }
 
-function disableButtonsCutters() {
-    
-}
+function resetGame() {
+    bread.reset();
+    cheese.reset();
+    ketchup.reset();
+    cutters.forEach(cutter => cutter.unhide());
+    redoButton.reset();
+    doneButton.reset();
+    saveButton.hide();
+ }
+
+ function finishGame() {
+    cutters.forEach(cutter => cutter.hide());
+    bread.button.hide();
+    cheese.button.hide();
+    ketchup.hide();
+    doneButton.hide();
+    saveButton.reset();
+    console.log("finished")
+ }
+
+ function saveGameImg() {
+    console.log("save clicked")
+    redoButton.hide();
+    saveButton.hide();
+    draw(); // Call draw() to not display buttons in saved image
+    saveCanvas('myCheeseToast.png');
+    redoButton.reset();
+    saveButton.reset();
+ }
