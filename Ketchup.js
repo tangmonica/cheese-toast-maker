@@ -5,6 +5,10 @@ class Ketchup {
         this.cursorImg = loadImage('assets/imgs/ketchup/ketchupCursor.png');
         this.dot = loadImage('assets/imgs/ketchup/ketchupDot.png');
         
+        this.selectSound = loadSound('assets/sounds/ketchup-select.mp3');
+        this.unselectSound = loadSound('assets/sounds/ketchup-unselect.mp3');
+        this.drawSound = loadSound('assets/sounds/ketchup-draw.mp3');
+
         this.x = gameWidth - 110;
         this.y = 100;
 
@@ -51,6 +55,9 @@ class Ketchup {
             if (!this.isOverBottle(mouseX + offsetX, mouseY + offsetY)) {
                 let dotInfo = [this.dot, mouseX + offsetX, mouseY + offsetY];
                 this.paths[this.zIndex].push(dotInfo);
+                if (!this.drawSound.isPlaying()) {
+                    this.drawSound.play();
+                }
             }
         }
     }

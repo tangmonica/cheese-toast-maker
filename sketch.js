@@ -46,6 +46,12 @@ function preload() {
     heartCutterImg = loadImage('assets/imgs/cutters/cutterHeart.png');
     heartMarker = loadImage('assets/imgs/cutters/markers/cutterHeartMarker.png');
     heartMask = loadImage('assets/imgs/cutters/masks/maskHeart.png');
+
+    // ===== SOUNDS =====
+    redoSound = loadSound('assets/sounds/redo.mp3');
+    doneSound = loadSound('assets/sounds/done.mp3');
+    saveSound = loadSound('assets/sounds/save.mp3');
+
 }
 
 function setup() {
@@ -56,9 +62,9 @@ function setup() {
     noSmooth();
 
     // ===== CREATE BUTTONS ===== //
-    redoButton = new Button(100, 300, redoButtonImg, redoButtonHoverImg, redoButtonPressedImg, null, resetGame);
-    doneButton = new Button(100, 450, doneButtonImg, doneButtonHoverImg, doneButtonPressedImg, null, finishGame);
-    saveButton = new Button(100, 450, saveButtonImg, saveButtonHoverImg, saveButtonPressedImg, null, saveGameImg);
+    redoButton = new Button(100, 300, redoButtonImg, redoButtonHoverImg, redoButtonPressedImg, null, redoSound, resetGame);
+    doneButton = new Button(100, 450, doneButtonImg, doneButtonHoverImg, doneButtonPressedImg, null, doneSound, finishGame);
+    saveButton = new Button(100, 450, saveButtonImg, saveButtonHoverImg, saveButtonPressedImg, null, saveSound, saveGameImg);
     saveButton.hide();
     bigButtons.push(redoButton);
     bigButtons.push(doneButton);
@@ -79,8 +85,8 @@ function setup() {
     cutters.push(heartCutter);
 
     // ===== CREATE BREAD & CHEESE OBJS ===== //
-    bread = new Food("bread", spawnBread);
-    cheese = new Food("cheese", spawnCheese);
+    bread = new Food("bread", gameWidth - 75, gameHeight - 180, spawnBread);
+    cheese = new Food("cheese", gameWidth - 75, gameHeight - 75, spawnCheese);
 
     // ===== CREATE KETCHUP OBJ =====
     ketchup = new Ketchup();
@@ -133,18 +139,32 @@ function mouseClicked() {
         bigButtons.forEach(bttn => {
             if (bttn.isOver()) {
                 bttn.clicked = true;
+                if (bttn.enabled) {
+                    bttn.sound.play();
+                }
             }
         })
         if (cheese.button.isOver()) {
+            if (cheese.button.enabled) {
+                cheese.button.sound.play();
+            }
             cheese.button.clicked = true;
         }
         if (bread.button.isOver()) {
+            if (bread.button.enabled) {
+                bread.button.sound.play();
+            }
             bread.button.clicked = true;
         }
 
         // To pick up and put down cutters
         cutters.forEach(cutter => {
             if (cutter.canGrab()) {
+                if (cutter.inUse) {
+                    cutter.unselectSound.play();
+                } else {
+                    cutter.selectSound.play();
+                }
                 cutter.inUse = !(cutter.inUse);
             }
         })
@@ -158,6 +178,11 @@ function mouseClicked() {
 
     // To use ketchup bottle
     if (ketchup.isOverBottle(mouseX, mouseY)) {
+        if (ketchup.inUse) {
+            ketchup.unselectSound.play();
+        } else {
+            ketchup.selectSound.play();
+        }
         ketchup.inUse = !(ketchup.inUse);
     }
 

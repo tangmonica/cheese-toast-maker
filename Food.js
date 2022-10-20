@@ -1,34 +1,19 @@
 class Food {
-    constructor(name, onClickEvent) {
+    constructor(name, buttonX, buttonY, onClickEvent) {
         this.name = name;
-        switch (name) {
-            case "cheese":
-                this.img = loadImage('assets/imgs/cheese.png');
-                this.originalImg = loadImage('assets/imgs/cheese.png');
-                this.button = new Button(
-                    gameWidth - 75, 
-                    gameHeight - 75, 
-                    loadImage('assets/imgs/buttons/cheeseButton.png'),
-                    null,
-                    loadImage('assets/imgs/buttons/cheeseButtonPressed.png'),
-                    loadImage('assets/imgs/buttons/cheeseButtonDisabled.png'),
-                    onClickEvent
-                    );
-                break;
-            case "bread":
-                this.img = loadImage('assets/imgs/bread.png');
-                this.originalImg = loadImage('assets/imgs/bread.png');
-                this.button = new Button(
-                    gameWidth - 75, 
-                    gameHeight - 180,  
-                    loadImage('assets/imgs/buttons/breadButton.png'),
-                    null,
-                    loadImage('assets/imgs/buttons/breadButtonPressed.png'),
-                    loadImage('assets/imgs/buttons/breadButtonDisabled.png'),
-                    onClickEvent
-                    );
-                break;
-        }
+        this.img = loadImage(`assets/imgs/${name}.png`);
+        this.originalImg = loadImage(`assets/imgs/${name}.png`);
+        this.button = new Button(
+            buttonX, 
+            buttonY, 
+            loadImage(`assets/imgs/buttons/${name}Button.png`),
+            null,
+            loadImage(`assets/imgs/buttons/${name}ButtonPressed.png`),
+            loadImage(`assets/imgs/buttons/${name}ButtonDisabled.png`),
+            loadSound(`assets/sounds/${name}.mp3`),
+            onClickEvent
+        );
+        
         this.x = 375;
         this.y = 375;
 
@@ -57,6 +42,7 @@ class Food {
 
     cut(canvasX, canvasY, cutterObj) {
         if (this.canCut && cutterObj.inUse && this.inBoundsForCutting(canvasX, canvasY)) {
+            cutterObj.inUseSound.play();
             // Redefine (x, y) relative to upper left corner of food image
             let upperLeftX = this.x - this.img.width / 2;
             let upperLeftY = this.y - this.img.height / 2;

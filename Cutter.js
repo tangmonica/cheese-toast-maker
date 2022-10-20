@@ -3,6 +3,11 @@ class Cutter {
         this.img = img;
         this.marker = marker;
         this.mask = mask;
+
+        this.selectSound = loadSound('assets/sounds/cutter-select.mp3');
+        this.unselectSound = loadSound('assets/sounds/cutter-unselect.mp3');
+        this.inUseSound = loadSound('assets/sounds/cutter-use.mp3');
+
         this.initialX = posX;
         this.initialY = posY;
 

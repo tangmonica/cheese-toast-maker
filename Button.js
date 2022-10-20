@@ -1,5 +1,5 @@
 class Button {
-    constructor(xPos, yPos, img, hoverImg, pressedImg, disabledImg, event) {
+    constructor(xPos, yPos, img, hoverImg, pressedImg, disabledImg, sound, event) {
         this.x = xPos;
         this.y = yPos;
         
@@ -7,6 +7,8 @@ class Button {
         this.hoverImg = hoverImg;
         this.pressedImg = pressedImg;
         this.disabledImg = disabledImg;
+
+        this.sound = sound;
         
         this.onClickEvent = event;
 
