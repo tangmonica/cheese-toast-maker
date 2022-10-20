@@ -9,6 +9,8 @@ bgCol = [129, 116, 136]
 let bigButtons = [];
 let cutters = [];
 
+let usingCutter;
+
 function preload() {
     // ===== PLATE IMG ===== //
     plate = loadImage('assets/imgs/plate.png');
@@ -166,6 +168,7 @@ function mouseClicked() {
                     cutter.selectSound.play();
                 }
                 cutter.inUse = !(cutter.inUse);
+                usingCutter = !usingCutter;
             }
         })
 
@@ -176,8 +179,10 @@ function mouseClicked() {
         })
     }
 
+    cutters.forEach(cutter => {usingCutter = usingCutter || cutter.inUse});
+
     // To use ketchup bottle
-    if (ketchup.canGrab()) {
+    if (ketchup.canGrab() && !usingCutter) {
         if (ketchup.inUse) {
             ketchup.unselectSound.play();
         } else {
