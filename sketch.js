@@ -50,7 +50,7 @@ function preload() {
     // ===== SOUNDS =====
     redoSound = loadSound('assets/sounds/redo.mp3');
     doneSound = loadSound('assets/sounds/done.mp3');
-    saveSound = loadSound('assets/sounds/save.mp3');
+    saveImgSound = loadSound('assets/sounds/save.mp3');
 
 }
 
@@ -64,7 +64,7 @@ function setup() {
     // ===== CREATE BUTTONS ===== //
     redoButton = new Button(100, 300, redoButtonImg, redoButtonHoverImg, redoButtonPressedImg, null, redoSound, resetGame);
     doneButton = new Button(100, 450, doneButtonImg, doneButtonHoverImg, doneButtonPressedImg, null, doneSound, finishGame);
-    saveButton = new Button(100, 450, saveButtonImg, saveButtonHoverImg, saveButtonPressedImg, null, saveSound, saveGameImg);
+    saveButton = new Button(100, 450, saveButtonImg, saveButtonHoverImg, saveButtonPressedImg, null, saveImgSound, saveGameImg);
     saveButton.hide();
     bigButtons.push(redoButton);
     bigButtons.push(doneButton);
