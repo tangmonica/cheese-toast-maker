@@ -179,8 +179,6 @@ function mouseClicked() {
         })
     }
 
-    cutters.forEach(cutter => {usingCutter = usingCutter || cutter.inUse});
-
     // To use ketchup bottle
     if (ketchup.canGrab() && !usingCutter) {
         if (ketchup.inUse) {
