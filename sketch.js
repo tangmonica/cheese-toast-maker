@@ -244,11 +244,9 @@ function resetGame() {
     ketchup.hide();
     doneButton.hide();
     saveButton.reset();
-    console.log("finished")
  }
 
  function saveGameImg() {
-    console.log("save clicked")
     redoButton.hide();
     saveButton.hide();
     draw(); // Call draw() to not display buttons in saved image
